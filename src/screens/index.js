@@ -11,7 +11,6 @@ import LinkAccountPage from './memberArea/updateProfile/LinkAccountPage';
 import SearchPage from './memberArea/search/SearchPage';
 import PublicProfilePage from './memberArea/search/PublicProfilePage';
 import CustomTopBar from './memberArea/search/CustomTopBar';
-
 import NotificationPage from './memberArea/Notifications/NotificationPage';
 
 // register all screens that should be navigatable to
