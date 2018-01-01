@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, ListView, Text, StyleSheet } from 'react-native';
-import { fetchNotifications, fetchFeed } from '../../../actions';
+import { fetchFeed } from '../../../actions';
 import { connect } from 'react-redux';
 import Row from './Row';
 
@@ -13,7 +13,6 @@ class NotificationPage extends Component {
     };
   }
   componentDidMount() {
-    //this.props.fetchNotifications();
     this.props.fetchFeed();
   }
 
@@ -63,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps, { fetchNotifications, fetchFeed })(NotificationPage);
+export default connect(mapStateToProps, { fetchFeed })(NotificationPage);
