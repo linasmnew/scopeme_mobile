@@ -1,0 +1,36 @@
+{
+  "name": "contactly_mobile",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "ios:setup": "node ./node_modules/react-native-fbsdk/bin/ios_setup.js"
+  },
+  "dependencies": {
+    "firebase": "^4.4.0",
+    "moment": "^2.20.1",
+    "react": "^16.0.0-beta.5",
+    "react-native": "^0.49.5",
+    "react-native-button": "^2.1.0",
+    "react-native-elements": "^0.17.0",
+    "react-native-fbsdk": "^0.6.3",
+    "react-native-image-picker": "^0.26.7",
+    "react-native-keyboard-aware-scroll-view": "^0.4.1",
+    "react-native-navigation": "^1.1.235",
+    "react-native-vector-icons": "^4.4.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0-alpha.12",
+    "remote-redux-devtools": "^0.5.12"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
