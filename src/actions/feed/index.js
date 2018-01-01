@@ -17,7 +17,6 @@ const fetchPhotoUrl = (uid) => {
       return { photoURL: snapshot.val() };
     })
     .catch((error) => {
-      console.log(error)
       throw new Error('error fetching photo url');
     });
 }
@@ -31,7 +30,6 @@ const fetchUsername = (uid) => {
       return { username: decodeUsername(snapshot.val()) };
     })
     .catch((error) => {
-      console.log(error)
       throw new Error('error fetching username');
     });
 }
@@ -40,10 +38,6 @@ const fetchGlobalScope = (scopeKey) => {
   return firebase.database().ref('scopes/'+scopeKey)
     .once('value')
     .then((snapshot) => {
-      // modify returned timestamp to ui friendly version
-      // let currentTimestamp = new Date().getTime();
-      // let receivedTimestamp = snapshot.val().timestamp;
-      //{...snapshot.val(), timestamp: currentTimestamp - receivedTimestamp}
       return snapshot.val();
     })
     .catch((error) => {
@@ -66,16 +60,19 @@ export const fetchFeed = () => {
           feed.push({ id: scope.key, author: scope.val() });
         });
         feed.reverse();
-        // feed is: [{ id: scopeIdn, author: uid1 }, { id: scopeIdn-1, author: uid2 }}
 
-        // for each scope reference in feed grab its full version from global scopes node
-        // and the authors username
+        // for each scope reference grab:
+          // its full version from global scopes node
+          // and the authors username
         return Promise.all(feed.map((item) => {
           return Promise.all([fetchGlobalScope(item.id), fetchUsername(item.author), fetchPhotoUrl(item.author)]);
         }));
       })
       .then((results) => {
-        // scopes: [ Array(3), Array(3), ... ]; position 1 is scope, position 2 is username, position 3 is photoUrl
+        // results: [ Array(3), Array(3), ... ];
+          // position 1 is scope object,
+          // position 2 is username object,
+          // position 3 is photoUrl object
         const handledResults = results.map((result) => {
           return { data: result[0], ...result[1], ...result[2] };
         });
