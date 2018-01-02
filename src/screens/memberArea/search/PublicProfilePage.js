@@ -83,7 +83,7 @@ class PublicProfilePage extends Component {
 
       // 0px away from bottom (change padding to increase)
       // and optimisation to avoid firing load more scopes request if existing page is not filled with 8 scopes
-      if ( a >= b  && this.state.isLoadinMore === false) {
+      if ( a >= b  && this.state.isLoadingMore === false) {
         this.setState({ isLoadingMore: true });
 
         fetchPublicScopes('load_more', this.props.found_users_id)
