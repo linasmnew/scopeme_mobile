@@ -3,6 +3,7 @@ import { View, Text, ListView, RefreshControl, StyleSheet } from 'react-native';
 import { fetchFeed } from '../../../actions';
 import { connect } from 'react-redux';
 import Row from './Row';
+import { FEED_LIMIT } from '../../../actions/feed';
 
 class NotificationPage extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class NotificationPage extends Component {
   // gets called on each scroll,
   _onScroll = (e) => {
     // if feed is not full, avoid running inner logic and wastful variable creation
-    if (this.state.dataSource.getRowCount() >= 10) {
+    if (this.state.dataSource.getRowCount() >= FEED_LIMIT) {
       const paddingToBottom = 0;
       const a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
       const b = e.nativeEvent.contentSize.height - paddingToBottom;

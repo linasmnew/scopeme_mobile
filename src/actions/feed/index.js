@@ -2,6 +2,8 @@ import moment from 'moment';
 import firebase from 'firebase';
 import { FETCH_FEED, FETCH_MORE_FEED } from '../types';
 
+export const FEED_LIMIT = 10;
+
 const decodeUsername = (text) => {
   if (text) {
     return text.replace(/\%2E/g, '.');
@@ -59,7 +61,7 @@ export const fetchFeed = (activity, cb) => {
 
       firebase.database().ref('users/'+user+'/feed')
         .orderByKey()
-        .limitToLast(10)
+        .limitToLast(FEED_LIMIT)
         .once('value')
         .then((snapshot) => {
           // snapshot is: { scopeId1: authorId, scopeId2: authorId, etc }
@@ -105,7 +107,7 @@ export const fetchFeed = (activity, cb) => {
         firebase.database().ref('users/'+user+'/feed')
           .orderByKey()
           .startAt(referenceToNewestKey)
-          .limitToFirst(11)
+          .limitToFirst(FEED_LIMIT+1)
           .once('value')
           .then((snapshot) => {
             let feed = [];
@@ -142,7 +144,7 @@ export const fetchFeed = (activity, cb) => {
         firebase.database().ref('users/'+user+'/feed')
           .orderByKey()
           .endAt(referenceToOldestKey)
-          .limitToLast(11)
+          .limitToLast(FEED_LIMIT+1)
           .once('value')
           .then((snapshot) => {
             let feed = [];
