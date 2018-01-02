@@ -11,7 +11,7 @@ class PublicProfilePage extends Component {
     publicScopes: [],
     isFollowing: false,
     refreshing: false,
-    isLoadinMore: false,
+    isLoadingMore: false,
   }
 
   componentDidMount() {
@@ -73,26 +73,30 @@ class PublicProfilePage extends Component {
       });
   }
 
+  // gets called on each scroll,
   _onScroll = (e) => {
-    const paddingToBottom = 0;
-    let a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
-    let b = e.nativeEvent.contentSize.height - paddingToBottom;
+    // if feed is not full, avoid running inner logic and wastful variable creation
+    if (this.state.publicScopes.length >= 8) {
+      const paddingToBottom = 0;
+      const a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
+      const b = e.nativeEvent.contentSize.height - paddingToBottom;
 
-    // 0px away from bottom (change padding to increase)
-    // and optimisation to avoid firing load more scopes request if existing page is not filled with 8 scopes
-    if ( a >= b  && this.state.publicScopes.length === 8 && this.state.isLoadinMore === false) {
-      this.setState({ isLoadinMore: true });
+      // 0px away from bottom (change padding to increase)
+      // and optimisation to avoid firing load more scopes request if existing page is not filled with 8 scopes
+      if ( a >= b  && this.state.isLoadinMore === false) {
+        this.setState({ isLoadingMore: true });
 
-      fetchPublicScopes('scrollToBottom', this.props.found_users_id)
-        .then((data) => {
-          this.setState((prevState) => ({
-            publicScopes: [ ...prevState.publicScopes, ...data ],
-            isLoadinMore: false,
-          }));
-        })
-        .catch((error) => {
-          this.setState({ isLoadinMore: false });
-        });
+        fetchPublicScopes('load_more', this.props.found_users_id)
+          .then((data) => {
+            this.setState((prevState) => ({
+              publicScopes: [ ...prevState.publicScopes, ...data ],
+              isLoadingMore: false,
+            }));
+          })
+          .catch((error) => {
+            this.setState({ isLoadingMore: false });
+          });
+      }
     }
   }
 

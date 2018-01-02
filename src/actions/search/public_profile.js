@@ -117,7 +117,7 @@ export const fetchPublicScopes = (activity, found_users_id) => {
         throw new Error('Error fetching scopes');
       });
 
-  } else if (activity === 'scrollToBottom' ) {
+  } else if (activity === 'load_more' ) {
 
     return firebase.database().ref('users/'+found_users_id+'/scopes')
       .orderByKey()
