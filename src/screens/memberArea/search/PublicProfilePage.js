@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { View, Text, ScrollView, RefreshControl, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import ScopeList from './ScopeList';
 import { SCOPE_LIMIT, scopeRefenceKeyUpdater, publicProfileView, fetch_public_users_bio, fetchPublicScopes, fetch_is_following, followUser } from '../../../actions';
