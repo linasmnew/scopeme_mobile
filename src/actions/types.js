@@ -3,6 +3,7 @@ export const FOLLOW_COUNT = 'follow_count';
 
 // feed
 export const FETCH_FEED = 'fetch_feed';
+export const FETCH_MORE_FEED = 'fetch_more_feed';
 
 // bio
 export const FETCH_USER_BIO = 'fetch_user_bio';
