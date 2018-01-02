@@ -3,7 +3,7 @@ import { View, Text, ListView, RefreshControl, StyleSheet } from 'react-native';
 import { fetchFeed } from '../../../actions';
 import { connect } from 'react-redux';
 import Row from './Row';
-import { FEED_LIMIT } from '../../../actions/feed';
+import { FEED_LIMIT } from '../../../actions';
 
 class NotificationPage extends Component {
   constructor(props) {

@@ -1,8 +1,7 @@
 import moment from 'moment';
 import firebase from 'firebase';
 import { FETCH_FEED, FETCH_MORE_FEED } from '../types';
-
-export const FEED_LIMIT = 10;
+import { FEED_LIMIT } from '../';
 
 const decodeUsername = (text) => {
   if (text) {

@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { UDPATE_SEARCH_INPUT, FETCH_PUBLIC_SCOPES, FETCH_PUBLIC_SCOPES_LOAD_MORE } from '../types';
 import { CLOUD_FUNCTION_ENDPOINT } from '../../config';
+import { SCOPE_LIMIT } from '../';
 
 /*
   updating search input needs to be done through redux
@@ -81,20 +82,26 @@ export const fetch_is_following = (found_users_id) => {
 };
 
 
+
+
+
+let referenceToNewestKey = '';
 let referenceToOldestKey = '';
 
-export const scopeRefenceKeyUpdater = (lastFetchedScopeReference) => {
-  referenceToOldestKey = lastFetchedScopeReference;
+export const scopeRefenceKeyUpdater = (updates) => {
+  if (typeof updates.oldest !== 'undefined') referenceToOldestKey = updates.oldest;
+  if (typeof updates.newest !== 'undefined') referenceToNewestKey = updates.newest;
 }
 
 export const fetchPublicScopes = (activity, found_users_id) => {
   let user = firebase.auth().currentUser;
   if (!user) return { type: 'logout' };
 
-  if (activity === 'initial' || activity === 'refresh') {
+  if (!referenceToOldestKey && !referenceToNewestKey) { // initial fetch
+
     return firebase.database().ref('users/'+found_users_id+'/scopes')
       .orderByKey()
-      .limitToLast(8)
+      .limitToLast(SCOPE_LIMIT)
       .once('value')
       .then((snapshot) => {
         let scopeKeys = [];
@@ -110,7 +117,35 @@ export const fetchPublicScopes = (activity, found_users_id) => {
         }));
       })
       .then((scopes) => {
-        scopeRefenceKeyUpdater(scopes[scopes.length-1].id);
+        scopeRefenceKeyUpdater({ oldest: scopes[scopes.length-1].id, newest: scopes[0].id });
+        return scopes;
+      })
+      .catch((error) => {
+        throw new Error('Error fetching scopes');
+      });
+
+  } else if (activity === 'refresh') {
+
+    return firebase.database().ref('users/'+found_users_id+'/scopes')
+      .orderByKey()
+      .startAt(referenceToNewestKey)
+      .limitToFirst(SCOPE_LIMIT+1)
+      .once('value')
+      .then((snapshot) => {
+        let scopeKeys = [];
+        snapshot.forEach((snap) => {
+          scopeKeys.push(snap.key);
+        });
+        scopeKeys = scopeKeys.reverse();
+
+        return Promise.all(scopeKeys.map((scopeKey) => {
+          return firebase.database().ref('scopes/'+scopeKey).once('value').then((snapshot) => {
+            return snapshot.val();
+          });
+        }));
+      })
+      .then((scopes) => {
+        scopeRefenceKeyUpdater({ newest: scopes[0].id });
         return scopes;
       })
       .catch((error) => {
@@ -122,7 +157,7 @@ export const fetchPublicScopes = (activity, found_users_id) => {
     return firebase.database().ref('users/'+found_users_id+'/scopes')
       .orderByKey()
       .endAt(referenceToOldestKey)
-      .limitToLast(9) // fetching 9 because last one will be duplicate of previous fetch - we're removing it inside helper
+      .limitToLast(SCOPE_LIMIT+1) // fetching 9 because last one will be duplicate of previous fetch - we're removing it inside helper
       .once('value')
       .then((snapshot) => {
         let scopeKeys = [];
@@ -138,7 +173,7 @@ export const fetchPublicScopes = (activity, found_users_id) => {
         }));
       })
       .then((scopes) => {
-        scopeRefenceKeyUpdater(scopes[scopes.length-1].id);
+        scopeRefenceKeyUpdater({ oldest: scopes[scopes.length-1].id });
         return scopes;
       })
       .catch((error) => {

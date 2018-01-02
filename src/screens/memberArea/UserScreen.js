@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, ActivityIndicator, Text, Button, ScrollView, TouchableOpacity, Image , TextInput, StyleSheet, Platform, Dimensions } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
-import { fetchUserBio, fetchScopes, createScope, editScope, removeScope, uploadProfileImage, logUserOut } from '../../actions';
+import { SCOPE_LIMIT, fetchUserBio, fetchScopes, createScope, editScope, removeScope, uploadProfileImage, logUserOut } from '../../actions';
 import ScopeList from './ScopeList';
 import ScopeSubmition from './ScopeSubmition';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -60,26 +60,23 @@ class UserScreen extends Component {
     });
   }
 
+  // gets called on each scroll
   _onScroll = (e) => {
-    const paddingToBottom = 0;
-    let a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
-    let b = e.nativeEvent.contentSize.height - paddingToBottom;
+    if (this.props.scopes.length >= SCOPE_LIMIT) {
+      const paddingToBottom = 0;
+      let a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
+      let b = e.nativeEvent.contentSize.height - paddingToBottom;
 
-    // 0px away from bottom (change paddingToBottom to increase)
-    // and optimisation to avoid firing load more scopes request if existing page is not filled with 8 scopes
-    if ( a >= b && this.props.scopes.length === 8 && this.state.isLoadinMore === false ) {
-      this.setState({ isLoadinMore: true });
+      // 0px away from bottom (change paddingToBottom to increase)
+      // and optimisation to avoid firing load more scopes request if existing page is not filled with 8 scopes
+      if ( a >= b && this.state.isLoadinMore === false ) {
+        this.setState({ isLoadinMore: true });
 
-      this.props.fetchScopes(() => {
-        this.setState({ isLoadinMore: false });
-      });
+        this.props.fetchScopes(() => {
+          this.setState({ isLoadinMore: false });
+        });
+      }
     }
-    // problem: if you scroll to the bottom and stay there:
-    //    > this function fires on every tab change and on logout
-
-    // solutions:
-    //    > after scrolling pull screen's scroll slightly up
-    //    > inside fetchScopes action check if user !== null (currently implemented)
   }
 
   showScopeSubmisionForm = () => {
@@ -88,12 +85,6 @@ class UserScreen extends Component {
     }));
   }
 
-  // reminder: isn't accessing this.props.user.photoURL dangerous if fetch takes long it will throw error???
-  // first should verify? this.props.user && this.props.user.photoURL
-  // no because when app is loaded all reducers get called and initialised with their default values
-  // and our user reducer defaults to {}, so calling photoURL on that is valid because user is defined,
-  // however if you tried calling something on photoURL than it would error as photoURL isn't defined
-  // so u only error if u try to access properties on an undefined object
   render() {
     if (this.state.isInitialising) return <ActivityIndicator style={{flex: 1,justifyContent: 'center',alignItems: 'center'}} size="small" />;
     if (this.state.error) return <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}><Text>{this.state.error}</Text></View>

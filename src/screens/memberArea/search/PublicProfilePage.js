@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, RefreshControl, Image, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import ScopeList from './ScopeList';
-import { scopeRefenceKeyUpdater, publicProfileView, fetch_public_users_bio, fetchPublicScopes, fetch_is_following, followUser } from '../../../actions';
+import { SCOPE_LIMIT, scopeRefenceKeyUpdater, publicProfileView, fetch_public_users_bio, fetchPublicScopes, fetch_is_following, followUser } from '../../../actions';
 
 class PublicProfilePage extends Component {
   state = {
@@ -22,16 +22,16 @@ class PublicProfilePage extends Component {
       .catch((error) => {
       });
 
-    fetchPublicScopes('initial', this.props.found_users_id)
+    fetch_is_following(this.props.found_users_id)
       .then((data) => {
-        this.setState({ publicScopes: data });
+        this.setState({ isFollowing: data });
       })
       .catch((error) => {
       });
 
-    fetch_is_following(this.props.found_users_id)
+    fetchPublicScopes('initial', this.props.found_users_id)
       .then((data) => {
-        this.setState({ isFollowing: data });
+        this.setState({ publicScopes: data });
       })
       .catch((error) => {
       });
@@ -40,7 +40,7 @@ class PublicProfilePage extends Component {
   }
 
   componentWillUnmount() {
-    scopeRefenceKeyUpdater(''); // resetting scope reference key so it's ready to be used for next user
+    scopeRefenceKeyUpdater({ oldest: '', newest: '' }); // resetting scope reference key so it's ready to be used for next user
   }
 
   _onRefresh = () => {
@@ -73,10 +73,10 @@ class PublicProfilePage extends Component {
       });
   }
 
-  // gets called on each scroll,
+  // gets called on each scroll
   _onScroll = (e) => {
     // if feed is not full, avoid running inner logic and wastful variable creation
-    if (this.state.publicScopes.length >= 8) {
+    if (this.state.publicScopes.length >= SCOPE_LIMIT) {
       const paddingToBottom = 0;
       const a = e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y;
       const b = e.nativeEvent.contentSize.height - paddingToBottom;

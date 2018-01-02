@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import { FETCH_SCOPES, CREATE_SCOPE, EDIT_SCOPE, REMOVE_SCOPE } from './types';
+import { SCOPE_LIMIT } from './';
 
 export const editScope = (scopeId, data, cb) => {
   let user = firebase.auth().currentUser;
@@ -73,7 +74,7 @@ export const fetchScopes = (cb) => {
       if (!referenceToOldestKey) { // initial fetch
         return firebase.database().ref('users/'+user.uid+'/scopes')
           .orderByKey()
-          .limitToLast(8)
+          .limitToLast(SCOPE_LIMIT)
           .once('value')
           .then((snapshot) => {
             let scopeKeys = [];
@@ -103,7 +104,7 @@ export const fetchScopes = (cb) => {
         return firebase.database().ref('users/'+user.uid+'/scopes')
           .orderByKey()
           .endAt(referenceToOldestKey)
-          .limitToLast(9) // fetching 6 because last one will be duplicate of previous fetch - we're removing it inside helper
+          .limitToLast(SCOPE_LIMIT+1) // fetching 6 because last one will be duplicate of previous fetch - we're removing it inside helper
           .once('value')
           .then((snapshot) => {
             let scopeKeys = [];
