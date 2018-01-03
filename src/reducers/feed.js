@@ -17,11 +17,12 @@ export default function(state = { list: [], referenceToOldestKey: '', referenceT
       };
 
     case REMOVE_SCOPE:
-      const filtered = state.list.filter((scope) => scope.id !== action.payload);
+      const filtered = state.list.filter((scope) => scope.data.id !== action.payload);
+      
       return {
         list: [ ...filtered ],
-        referenceToOldestKey: filtered.length > 0 ? filtered[filtered.length-1][0].id : '',
-        referenceToNewestKey: filtered.length > 0 ? filtered[0][0].id : '',
+        referenceToOldestKey: filtered.length > 0 ? filtered[filtered.length-1].data.id : '',
+        referenceToNewestKey: filtered.length > 0 ? filtered[0].data.id : '',
       };
 
     default:

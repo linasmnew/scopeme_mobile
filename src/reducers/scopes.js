@@ -19,7 +19,10 @@ export default function(state = { list: [], referenceToOldestKey: '' }, action) 
 
     case REMOVE_SCOPE:
       const filtered = state.list.filter((scope) => scope.id !== action.payload);
-      return { ...state, list: [ ...filtered ] };
+      return {
+        list: [ ...filtered ],
+        referenceToOldestKey: filtered.length > 0 ? filtered[filtered.length-1].id : ''
+      };
 
     default:
       return state;
