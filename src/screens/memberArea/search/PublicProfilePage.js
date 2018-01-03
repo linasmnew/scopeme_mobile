@@ -48,24 +48,9 @@ class PublicProfilePage extends Component {
 
     fetchPublicScopes('refresh', this.props.found_users_id)
       .then((data) => {
-        this.setState((prevState) => {
-          let newData = [];
-          let flag = false;
-
-          for(var i = 0; i < data.length; i++) {
-            for (var j = 0; j < prevState.publicScopes.length; j++) {
-              if (data[i].id === prevState.publicScopes[j].id) {
-                flag = true;
-              }
-            }
-
-            if (!flag) newData.push(data[i]);
-          }
-
-          return {
-            publicScopes: [ ...newData, ...prevState.publicScopes ],
-            refreshing: false
-          }
+        this.setState({
+          publicScopes: [ ...data, ...prevState.publicScopes ],
+          refreshing: false
         });
       })
       .catch((error) => {
