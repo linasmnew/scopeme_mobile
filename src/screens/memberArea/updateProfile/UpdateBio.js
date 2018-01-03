@@ -16,7 +16,12 @@ class UpdateBio extends Component {
         id: 'save',
       },
     ]
-  }
+  };
+
+  static navigatorStyle = {
+    tabBarHidden: true
+  };
+
 
   state = {
     name: this.props.name || '',

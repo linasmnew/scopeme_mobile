@@ -16,7 +16,11 @@ class UpdatePassword extends Component {
         id: 'save',
       },
     ]
-  }
+  };
+
+  static navigatorStyle = {
+    tabBarHidden: true
+  };
 
   state = {
     currentPassword: '',

@@ -7,6 +7,10 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { isValidEmail, isPasswordValid } from './validation';
 
 class LinkAccountPage extends Component {
+  static navigatorStyle = {
+    tabBarHidden: true
+  };
+  
   state = {
     passwordProvider: false,
     facebookProvider: false,

@@ -17,7 +17,11 @@ class EditScope extends Component {
         title: 'Save',
         id: 'save',
       }],
-  }
+  };
+
+  static navigatorStyle = {
+    tabBarHidden: true
+  };
 
   state = {
     name: this.props.scope.name,

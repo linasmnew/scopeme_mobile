@@ -17,7 +17,11 @@ class UpdateEmail extends Component {
         id: 'save',
       },
     ]
-  }
+  };
+
+  static navigatorStyle = {
+    tabBarHidden: true
+  };
 
   state = {
     email: firebase.auth().currentUser.email,
