@@ -117,7 +117,7 @@ class ProfileSettingsPage extends Component {
   }
 
   goToAccountLinking = () => {
-    this.props.navigator.push({ screen: 'LinkAccountPage', title: 'Link Account' });
+    this.props.navigator.push({ screen: 'LinkAccountPage', title: 'Link Account', backButtonTitle: '' });
   }
 }
 
