@@ -69,7 +69,7 @@ class ProfileSettingsPage extends Component {
 
         <TouchableOpacity onPress={this.goToAccountLinking}>
           <View>
-            <Text style={{ color: '#737577', marginTop: 20 }}>Link accounts</Text>
+            <Text style={{ color: '#737577', marginTop: 20 }}>Link account</Text>
             <View style={styles.updateLoginDetailsContainer}>
               <Icon
                 name='flash'
